@@ -5,6 +5,7 @@ on:
 
 jobs:
   destroy:
+    environment: production
     runs-on: ubuntu-latest
 
     steps:
