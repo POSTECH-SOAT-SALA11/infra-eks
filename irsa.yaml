@@ -3,4 +3,4 @@ kind: ServiceAccount
 metadata:
   name: irsasecrets
   annotations:
-    eks.amazonaws.com/role-arn: "arn:aws:iam::851725345801:role/roleNodeSecrets"
+    eks.amazonaws.com/role-arn: "arn:aws:iam::779846815660:role/roleNodeSecrets"
