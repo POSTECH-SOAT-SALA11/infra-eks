@@ -181,7 +181,7 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   subnet_ids      = [data.aws_subnet.subnet1.id, data.aws_subnet.subnet2.id]
 
   instance_types = ["t3.large"]
-  disk_size      = 20
+
   tags = {
     "Name" = "eks-node-app"
   }
@@ -194,7 +194,7 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
     min_size     = 1
   }
 
-  # Adicionando a configuração de IMDSv2 como optional
+  # Referenciando o Launch Template com a configuração correta
   launch_template {
     id      = aws_launch_template.eks_node_template.id
     version = "$Latest" # Especificando a versão mais recente do template
@@ -207,16 +207,28 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   ]
 }
 
+
 resource "aws_launch_template" "eks_node_template" {
   name_prefix = "eks-node-template-"
 
-  # Aqui você especifica as opções do IMDS
+  # Definindo as opções de metadados do IMDSv2
   metadata_options {
     http_tokens                 = "optional" # IMDSv2 opcional
     http_put_response_hop_limit = 2
     instance_metadata_tags      = "enabled"
   }
+
+  # Definindo o tamanho do disco no launch template
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size = 20 # Definindo o tamanho do disco
+      volume_type = "gp3"
+    }
+  }
 }
+
 
 
 data "tls_certificate" "thumbprint_eks" {
