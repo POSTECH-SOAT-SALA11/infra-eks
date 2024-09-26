@@ -116,3 +116,6 @@ jobs:
             --set vpcId=vpc-0a644377c29b94739 \
             --set aws.region=$AWS_REGION \
             --set serviceAccount.name=aws-load-balancer-controller
+
+      - name: Aplicar Ingress e IRSA
+        run: kubectl apply -f ingress-controller.yaml && kubectl apply -f irsa.yaml
