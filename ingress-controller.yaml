@@ -6,29 +6,37 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
-    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '120'
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "120"
     alb.ingress.kubernetes.io/target-group-attributes: slow_start.duration_seconds=120
-    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '10'
-    alb.ingress.kubernetes.io/success-codes: '200'
-    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
-    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "10"
+    alb.ingress.kubernetes.io/success-codes: "200"
+    alb.ingress.kubernetes.io/healthy-threshold-count: "2"
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
     alb.ingress.kubernetes.io/healthcheck-path: /health
+    nginx.ingress.kubernetes.io/rewrite-target: / # Adicione a reescrita
 spec:
-  ingressClassName: alb  # Aqui você especifica o uso do ALB
+  ingressClassName: alb
   rules:
-  - http:
-      paths:
-      - path: /avalanches
-        pathType: Prefix
-        backend:
-          service:
-            name: avalanches-service
-            port:
-              number: 8080
-      - path: /payment
-        pathType: Prefix
-        backend:
-          service:
-            name: sistema-pagamentos-mock-service
-            port:
-              number: 5001
+    - http:
+        paths:
+          - path: /avalanches/
+            pathType: Prefix
+            backend:
+              service:
+                name: avalanches-service
+                port:
+                  number: 8080
+          - path: /swagger-ui-avalanches/ # Adicione esta linha para mapear o Swagger UI
+            pathType: Prefix
+            backend:
+              service:
+                name: avalanches-service
+                port:
+                  number: 8080
+          - path: /payment
+            pathType: Prefix
+            backend:
+              service:
+                name: sistema-pagamentos-mock-service
+                port:
+                  number: 5001

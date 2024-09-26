@@ -56,8 +56,8 @@ resource "aws_iam_role" "roleEKS" {
     policy = jsonencode({
       Version = "2012-10-17",
       Statement = [{
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "ec2:DescribeInstances",
         ],
         Resource = "*",
@@ -67,7 +67,7 @@ resource "aws_iam_role" "roleEKS" {
 }
 
 resource "aws_iam_role" "roleNodeEKS" {
-  name = "roleNodeEKS"
+  name               = "roleNodeEKS"
   assume_role_policy = data.aws_iam_policy_document.policyDocNodeEKS.json
 }
 
@@ -147,14 +147,41 @@ resource "aws_eks_cluster" "clusterTechChallenge" {
   ]
 }
 
+# resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
+#   cluster_name    = aws_eks_cluster.clusterTechChallenge.name
+#   node_group_name = "appNodeTechChallenge"
+#   node_role_arn   = aws_iam_role.roleNodeEKS.arn
+#   subnet_ids      = [data.aws_subnet.subnet1.id, data.aws_subnet.subnet2.id]
+
+#   instance_types = ["t3.large"] 
+#   disk_size      = 20   
+#   tags = {
+#     "Name" = "eks-node-app"
+#   }
+
+#   capacity_type = "ON_DEMAND"
+
+#   scaling_config {
+#     desired_size = 3
+#     max_size     = 7
+#     min_size     = 1
+#   }
+
+#   depends_on = [
+#     aws_iam_role_policy_attachment.policyRoleNodeEKS,
+#     aws_iam_role_policy_attachment.cniPolicyRoleNodeEKS,
+#     aws_iam_role_policy_attachment.ec2PolicyRoleNodeEKS,
+#   ]
+# }
+
 resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   cluster_name    = aws_eks_cluster.clusterTechChallenge.name
   node_group_name = "appNodeTechChallenge"
   node_role_arn   = aws_iam_role.roleNodeEKS.arn
   subnet_ids      = [data.aws_subnet.subnet1.id, data.aws_subnet.subnet2.id]
 
-  instance_types = ["t3.large"] 
-  disk_size      = 20   
+  instance_types = ["t3.large"]
+  disk_size      = 20
   tags = {
     "Name" = "eks-node-app"
   }
@@ -167,12 +194,30 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
     min_size     = 1
   }
 
+  # Adicionando a configuração de IMDSv2 como optional
+  launch_template {
+    id      = aws_launch_template.eks_node_template.id
+    version = "$Latest" # Especificando a versão mais recente do template
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.policyRoleNodeEKS,
     aws_iam_role_policy_attachment.cniPolicyRoleNodeEKS,
     aws_iam_role_policy_attachment.ec2PolicyRoleNodeEKS,
   ]
 }
+
+resource "aws_launch_template" "eks_node_template" {
+  name_prefix = "eks-node-template-"
+
+  # Aqui você especifica as opções do IMDS
+  metadata_options {
+    http_tokens                 = "optional" # IMDSv2 opcional
+    http_put_response_hop_limit = 2
+    instance_metadata_tags      = "enabled"
+  }
+}
+
 
 data "tls_certificate" "thumbprint_eks" {
   url = aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer
