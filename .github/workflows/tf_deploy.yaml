@@ -63,11 +63,7 @@ jobs:
             curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
             aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
           fi
-      - name: Annotate ServiceAccount for AWS Load Balancer Controller
-        run: |
-          kubectl annotate serviceaccount aws-load-balancer-controller \
-            -n kube-system \
-            eks.amazonaws.com/role-arn=arn:aws:iam::$AWS_ACCOUNT_ID:role/AmazonEKSLoadBalancerControllerRole --overwrite
+
       - name: Install or upgrade AWS Load Balancer Controller
         run: |
           helm repo add eks https://aws.github.io/eks-charts
@@ -87,5 +83,12 @@ jobs:
             --set vpcId=vpc-0a644377c29b94739 \
             --set aws.region=$AWS_REGION \
             --set serviceAccount.name=aws-load-balancer-controller
+            
+      - name: Annotate ServiceAccount for AWS Load Balancer Controller
+        run: |
+          kubectl annotate serviceaccount aws-load-balancer-controller \
+            -n kube-system \
+            eks.amazonaws.com/role-arn=arn:aws:iam::$AWS_ACCOUNT_ID:role/AmazonEKSLoadBalancerControllerRole --overwrite
+      
       - name: Aplicar Ingress e IRSA
         run: kubectl apply -f ingress-controller.yaml && kubectl apply -f irsa.yaml
