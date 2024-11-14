@@ -1,11 +1,11 @@
 data "aws_vpc" "selected" {
-  id = "vpc-0a644377c29b94739"
+  id = "vpc-03384bddf29ad7137"
 }
 
 data "aws_subnet" "subnet1" {
-  id = "subnet-0115eee2625c3d9a0"
+  id = "subnet-05e4bf85d0505a16d"
 }
 
 data "aws_subnet" "subnet2" {
-  id = "subnet-003d6328b6b8d9084"
+  id = "subnet-0b6c79aeddba8a452"
 }
