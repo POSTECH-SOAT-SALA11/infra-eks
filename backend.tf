@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.3"
 
   backend "s3" {
-    bucket         = "tfstate-6soat"
+    bucket         = "6soat-tfstate"
     key            = "terraform-eks/terraform.tfstate"
     region         = "sa-east-1"
     encrypt        = true
