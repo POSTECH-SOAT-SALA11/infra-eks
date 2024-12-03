@@ -19,31 +19,31 @@ spec:
   rules:
     - http:
         paths:
-          - path: /avalanches/
+          - path: /pedido/
             pathType: Prefix
             backend:
               service:
-                name: avalanches-service
+                name: pedido-service
                 port:
-                  number: 8080
-          - path: /avalanches/v1/cliente
+                  number: 8081
+          - path: /pagamento-ms/
             pathType: Prefix
             backend:
               service:
-                name: avalanches-service
+                name: pagamento-service
                 port:
-                  number: 8080
-          - path: /swagger-ui-avalanches/ 
+                  number: 8082
+          - path: /producao/
             pathType: Prefix
             backend:
               service:
-                name: avalanches-service
+                name: producao-service
                 port:
-                  number: 8080
+                  number: 8083
           - path: /pagamento
             pathType: Prefix
             backend:
               service:
-                name: sistema-pagamentos-mock-service
+                name: sistema-pagamento-ms
                 port:
                   number: 5001
