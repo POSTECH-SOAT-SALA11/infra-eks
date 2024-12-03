@@ -13,30 +13,37 @@ metadata:
     alb.ingress.kubernetes.io/healthy-threshold-count: "2"
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
     alb.ingress.kubernetes.io/healthcheck-path: /health
-    nginx.ingress.kubernetes.io/rewrite-target: / # Adicione a reescrita
+    nginx.ingress.kubernetes.io/rewrite-target: / 
 spec:
   ingressClassName: alb
   rules:
     - http:
         paths:
-          - path: /avalanches/
+          - path: /pedido/
             pathType: Prefix
             backend:
               service:
-                name: avalanches-service
+                name: pedido-service
                 port:
-                  number: 8080
-          - path: /swagger-ui-avalanches/ # Adicione esta linha para mapear o Swagger UI
+                  number: 8081
+          - path: /pagamento-ms/
             pathType: Prefix
             backend:
               service:
-                name: avalanches-service
+                name: pagamento-service
                 port:
-                  number: 8080
-          - path: /payment
+                  number: 8082
+          - path: /producao/
             pathType: Prefix
             backend:
               service:
-                name: sistema-pagamentos-mock-service
+                name: producao-service
+                port:
+                  number: 8083
+          - path: /pagamento
+            pathType: Prefix
+            backend:
+              service:
+                name: sistema-pagamento-ms
                 port:
                   number: 5001
