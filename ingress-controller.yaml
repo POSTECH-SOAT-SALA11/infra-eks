@@ -19,31 +19,31 @@ spec:
   rules:
     - http:
         paths:
-          - path: /pedido/
+          - path: /avalanches/v1/pedido/
             pathType: Prefix
             backend:
               service:
                 name: pedido-service
                 port:
                   number: 8081
-          - path: /pagamento-ms/
+          - path: /avalanches/v1/pagamento/
             pathType: Prefix
             backend:
               service:
                 name: pagamento-service
                 port:
-                  number: 8082
-          - path: /producao/
+                  number: 8282
+          - path: /avalanches/v1/produto/
             pathType: Prefix
             backend:
               service:
-                name: producao-service
+                name: ms-producao
                 port:
-                  number: 8083
+                  number: 8383
           - path: /pagamento
             pathType: Prefix
             backend:
               service:
-                name: sistema-pagamento-ms
+                name: ms-pagamento-externo-service
                 port:
                   number: 5001
