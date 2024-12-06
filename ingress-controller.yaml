@@ -12,38 +12,37 @@ metadata:
     alb.ingress.kubernetes.io/success-codes: "200"
     alb.ingress.kubernetes.io/healthy-threshold-count: "2"
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    nginx.ingress.kubernetes.io/rewrite-target: / 
+    alb.ingress.kubernetes.io/healthcheck-path: /
 spec:
   ingressClassName: alb
   rules:
     - http:
         paths:
-          - path: /pedido/
+          - path: /avalanches/v1/pedido/
             pathType: Prefix
             backend:
               service:
                 name: pedido-service
                 port:
                   number: 8081
-          - path: /pagamento-ms/
+          - path: /avalanches/v1/pagamento/
             pathType: Prefix
             backend:
               service:
                 name: pagamento-service
                 port:
                   number: 8082
-          - path: /producao/
+          - path: /avalanches/v1/produto/
             pathType: Prefix
             backend:
               service:
-                name: producao-service
+                name: ms-producao
                 port:
                   number: 8083
           - path: /pagamento
             pathType: Prefix
             backend:
               service:
-                name: sistema-pagamento-ms
+                name: ms-pagamento-externo-service
                 port:
                   number: 5001
